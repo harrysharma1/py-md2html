@@ -53,8 +53,8 @@ class MarkdownCompiler:
             self.tokens= []
             while pos < len(self.data):
                 if self.data[pos] == "\n":
-                    line += 1
                     self.tokens.append(Token(pos,TOKEN_DICT["NEWLINE"],line,""))
+                    line += 1
                 elif self.data[pos] == "#":
                     self.tokens.append(Token(pos,TOKEN_DICT["HASH"],line,""))
                 elif self.data[pos] == "_":
@@ -64,7 +64,7 @@ class MarkdownCompiler:
                 elif self.data[pos] == "[":
                     self.tokens.append(Token(pos,TOKEN_DICT["STRAIGHTBRACEOPEN"],line,""))
                 elif self.data[pos] == "]":
-                    self.tokens.append(Token(pos,TOKEN_DICT["UNDERSCORE"],line,""))
+                    self.tokens.append(Token(pos,TOKEN_DICT["STRAIGHTBRACECLOSE"],line,""))
                 elif self.data[pos] == "(":
                     self.tokens.append(Token(pos,TOKEN_DICT["PARENOPEN"],line,""))
                 elif self.data[pos] == ")":
@@ -77,15 +77,13 @@ class MarkdownCompiler:
                     self.tokens.append(Token(pos,TOKEN_DICT["BANG"],line,""))
                 else:
                     temp = ""
-                    text = True
-                    while text and pos<len(self.data):
-                        if self.data[pos] == ['\n', '!',  '#', '_', '*', '-', '[', ']', '(', ')', '`', '>']:
-                                text = False
-                        else:
-                            temp += self.data[pos]
-                            pos+=1
-                    self.tokens.append((Token(pos,TOKEN_DICT["TEXT"],line,temp)))
-                    continue
+                    while pos < len(self.data) and self.data[pos] not in ['\n', '!', '#', '_', '*', '-', '[', ']', '(', ')', '`', '>']:
+                        temp += self.data[pos]
+                        pos += 1
+                    if temp:  # Add the accumulated text if it's not empty
+                        start_pos = pos - len(temp)
+                        self.tokens.append(Token(start_pos, TOKEN_DICT["TEXT"], line, temp))
+                    continue  # Skip pos increment at the end of the loop
                 pos+=1
                 
 
