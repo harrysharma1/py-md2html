@@ -1,5 +1,6 @@
 from typing import NamedTuple
 from enum import Enum
+import sys
 
 class KindEnum(Enum):
     HASH = 1 # #
@@ -78,6 +79,8 @@ class MarkdownCompiler:
                     self.tokens.append(Token(pos,TOKEN_DICT["TEXT"],line,self.data[pos]))
                 pos+=1
 
-a = MarkdownCompiler("test.md")
+
+file = sys.argv[1]
+a = MarkdownCompiler(file)
 a.tokenize()
 print(a.tokens)
