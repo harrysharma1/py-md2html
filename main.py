@@ -76,8 +76,18 @@ class MarkdownCompiler:
                 elif self.data[pos] == "!":
                     self.tokens.append(Token(pos,TOKEN_DICT["BANG"],line,""))
                 else:
-                    self.tokens.append(Token(pos,TOKEN_DICT["TEXT"],line,self.data[pos]))
+                    temp = ""
+                    text = True
+                    while text and pos<len(self.data):
+                        if self.data[pos] == ['\n', '!',  '#', '_', '*', '-', '[', ']', '(', ')', '`', '>']:
+                                text = False
+                        else:
+                            temp += self.data[pos]
+                            pos+=1
+                    self.tokens.append((Token(pos,TOKEN_DICT["TEXT"],line,temp)))
+                    continue
                 pos+=1
+                
 
 
 file = sys.argv[1]
