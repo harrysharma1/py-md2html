@@ -3,6 +3,7 @@ from enum import Enum
 import sys
 
 class KindEnum(Enum):
+    TEXT = 0 #  [a-z][A-Z][0-9]
     HASH = 1 # #
     UNDERSCORE = 2 # _
     STAR = 3 # *
@@ -15,9 +16,10 @@ class KindEnum(Enum):
     BACKTICK = 10 # `
     GREATERTHAN = 11 # >
     BANG = 12 # !
-    TEXT = 13 # [a-z][A-Z]
+    TILDE = 13 # ~
 
 TOKEN_DICT ={
+    "TEXT":KindEnum(0), # [a-z][A-Z][0-9]
     "HASH":KindEnum(1), # #
     "UNDERSCORE":KindEnum(2), # _
     "STAR":KindEnum(3), # *
@@ -29,8 +31,8 @@ TOKEN_DICT ={
     "PARENCLOSE":KindEnum(9), # )
     "BACKTICK":KindEnum(10),# `
     "GREATERTHAN":KindEnum(11), # >
-    "BANG":KindEnum(12),# !
-    "TEXT":KindEnum(13)
+    "BANG":KindEnum(12), # !
+    "TILDE":KindEnum(13) # ~
 }
 
 class Token(NamedTuple):
@@ -75,9 +77,11 @@ class MarkdownCompiler:
                     self.tokens.append(Token(pos,TOKEN_DICT["GREATERTHAN"],line,""))
                 elif self.data[pos] == "!":
                     self.tokens.append(Token(pos,TOKEN_DICT["BANG"],line,""))
+                elif self.data[pos] == "~":
+                    self.tokens.append(Token(pos,TOKEN_DICT["TILDE"],line,""))
                 else:
                     temp = ""
-                    while pos < len(self.data) and self.data[pos] not in ['\n', '!', '#', '_', '*', '-', '[', ']', '(', ')', '`', '>']:
+                    while pos < len(self.data) and self.data[pos] not in ['\n', '!', '#', '_', '*', '-', '[', ']', '(', ')', '`', '>','~']:
                         temp += self.data[pos]
                         pos += 1
                     if temp:  # Add the accumulated text if it's not empty
@@ -85,9 +89,7 @@ class MarkdownCompiler:
                         self.tokens.append(Token(start_pos, TOKEN_DICT["TEXT"], line, temp))
                     continue  # Skip pos increment at the end of the loop
                 pos+=1
-                
-
-
+            
 file = sys.argv[1]
 a = MarkdownCompiler(file)
 a.tokenize()
