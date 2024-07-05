@@ -45,7 +45,7 @@ class MarkdownCompiler:
         def __init__(self,f):
             try:
                 with open(f,'r') as file:
-                    self.data = file.read().rstrip()
+                    self.data = file.read()
             except FileNotFoundError:
                 self.data = ""
         
