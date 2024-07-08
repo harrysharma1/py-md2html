@@ -1,6 +1,7 @@
 from typing import NamedTuple
 from enum import Enum
 import sys
+import ast
 
 class KindEnum(Enum):
     TEXT = 0 #  [a-z][A-Z][0-9]
@@ -89,7 +90,8 @@ class MarkdownCompiler:
                         self.tokens.append(Token(start_pos, TOKEN_DICT["TEXT"], line, temp))
                     continue  # Skip pos increment at the end of the loop
                 pos+=1
-            
+        
+
 file = sys.argv[1]
 a = MarkdownCompiler(file)
 a.tokenize()
