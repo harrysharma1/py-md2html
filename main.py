@@ -91,8 +91,19 @@ class MarkdownCompiler:
                     continue  # Skip pos increment at the end of the loop
                 pos+=1
         
-
+        def parse(self):
+                ast = {
+                    "root" : [
+                    ]
+                }
+                for i in self.tokens:
+                    if i.kind == KindEnum.HASH:
+                        ast["root"].append("")
 file = sys.argv[1]
 a = MarkdownCompiler(file)
 a.tokenize()
-print(a.tokens)
+
+b = Token(0,TOKEN_DICT["HASH"],0,"")
+print(b.kind)
+for i in a.tokens:
+    print(i)
